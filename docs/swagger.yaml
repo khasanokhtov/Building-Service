@@ -1,0 +1,84 @@
+basePath: /
+definitions:
+  models.Building:
+    properties:
+      city:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      floors:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+      year:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API для управления строениями
+  title: Building API
+  version: "1.0"
+paths:
+  /buildings:
+    get:
+      consumes:
+      - application/json
+      description: Получает список строений с возможностью фильтрации
+      parameters:
+      - description: Город
+        in: query
+        name: city
+        type: string
+      - description: Год
+        in: query
+        name: year
+        type: integer
+      - description: Количество этажей
+        in: query
+        name: floors
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Building'
+            type: array
+      summary: Получить список строений
+      tags:
+      - buildings
+    post:
+      consumes:
+      - application/json
+      description: Добавляет новое строение в базу данных
+      parameters:
+      - description: Данные строения
+        in: body
+        name: building
+        required: true
+        schema:
+          $ref: '#/definitions/models.Building'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Building'
+        "400":
+          description: Ошибка валидации
+          schema:
+            type: string
+      summary: Добавить строение
+      tags:
+      - buildings
+swagger: "2.0"
