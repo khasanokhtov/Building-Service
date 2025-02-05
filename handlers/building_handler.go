@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"building-service/database"
 	"building-service/models"
 	"building-service/repository"
 	"net/http"
@@ -51,16 +52,34 @@ func CreateBuildingHandler(c *gin.Context){
 // @Success 200 {array} models.Building
 // @Router /buildings [get]
 func GetBuildingsHandler(c *gin.Context){
-
 	city := c.Query("city")
-	year, _ := strconv.Atoi(c.Query("year"))
+	yearFrom, _ := strconv.Atoi(c.Query("year_from"))
+	yearTo, _ := strconv.Atoi(c.Query("year_to"))
 	floors, _ := strconv.Atoi(c.Query("floors"))
 
-	buildings, err := repository.GetBuildings(city, year, floors)
-	if err != nil {
+	query := database.DB.Model(&models.Building{})
+
+	if city != "" {
+		query = query.Where("city = ?", city)
+	}
+	if yearFrom != 0 && yearTo != 0 {
+		query = query.Where("year BETWEEN ? AND ?", yearFrom, yearTo)
+	} else if yearFrom != 0 {
+		query = query.Where("year >= ?", yearFrom)
+	} else if yearTo != 0 {
+		query = query.Where("year <= ?", yearTo)
+	}
+	if floors != 0 {
+		query = query.Where("floors = ?", floors)
+	}
+
+	var buildings []models.Building
+	if err := query.Find(&buildings).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка загрузки данных"})
 		return
+
 	}
 
 	c.JSON(http.StatusOK, buildings)
+
 }

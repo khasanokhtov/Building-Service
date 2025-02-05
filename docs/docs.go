@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/buildings": {
             "get": {
-                "description": "Получает список строений с возможностью фильтрации",
+                "description": "Получает список строений с возможностью фильтрации по городу, году (диапазон) и количеству этажей",
                 "consumes": [
                     "application/json"
                 ],
@@ -37,8 +37,14 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Год",
-                        "name": "year",
+                        "description": "Год (от)",
+                        "name": "year_from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Год (до)",
+                        "name": "year_to",
                         "in": "query"
                     },
                     {

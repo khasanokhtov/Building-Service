@@ -30,15 +30,20 @@ paths:
     get:
       consumes:
       - application/json
-      description: Получает список строений с возможностью фильтрации
+      description: Получает список строений с возможностью фильтрации по городу, году
+        (диапазон) и количеству этажей
       parameters:
       - description: Город
         in: query
         name: city
         type: string
-      - description: Год
+      - description: Год (от)
         in: query
-        name: year
+        name: year_from
+        type: integer
+      - description: Год (до)
+        in: query
+        name: year_to
         type: integer
       - description: Количество этажей
         in: query
